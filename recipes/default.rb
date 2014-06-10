@@ -57,6 +57,10 @@ if fqdn
     end
 
   when 'centos', 'redhat', 'amazon', 'scientific'
+    service 'network' do
+      action :nothing
+    end
+
     hostfile = '/etc/sysconfig/network'
     ruby_block "Update #{hostfile}" do
       block do
@@ -80,9 +84,6 @@ if fqdn
     execute "hostname #{hostname}" do
       only_if { node['hostname'] != hostname }
       notifies :reload, 'ohai[reload]', :immediately
-    end
-    service 'network' do
-      action :restart
     end
 
   else
